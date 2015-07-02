@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:flexiframe="com.google.code.flexiframe.*"
+			   minWidth="955" minHeight="900" backgroundAlpha="0">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			protected function menubar1_mouseOverHandler(event:MouseEvent):void{
+				iframehideshow(-1)
+				
+			}
+			protected function pannel_mouseout(event:MouseEvent):void {
+				iframehideshow(0);
+			}
+			protected function myFunction(event:MouseEvent):void {                    
+				iFrameBySource.callIFrameFunction("tijiao",null,handleResult);
+			} 
+			private function handleResult(result:Object):void
+			{
+				iFrameBySource.callIFrameFunction("showIframe");
+				iFrameBySource.callIFrameFunction("showDiv");
+				Alert.show("返回结果为： \r\n"+result.xm,"Flex的提示",Alert.OK);
+				
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				iframehideshow(-1)
+				// 调用当前iframe嵌入页面中的sayHello 的JavaScript方法
+				iFrameBySource.callIFrameFunction("myFunction");
+				Alert.show("提交成功");
+				
+				
+			}
+			private function showIFrameHandler(event:MouseEvent):void{
+				iframehideshow(1);
+				
+			}
+			private function iframehideshow(val:int):void {
+				ExternalInterface.call("eval", "(function(){document.getElementById('iFrameBySource0').style.zIndex='"+val+"';})()");    
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<mx:VBox width="100%" height="100%" backgroundAlpha="0">
+		<mx:TabNavigator id="stnContent" x="188" y="26" width="980" height="503" backgroundAlpha="0"
+						 mouseOver="showIFrameHandler(event)">
+			
+			<mx:Canvas id="test1" width="100%" height="100%" label="Google" backgroundAlpha="0.0"
+					   mouseOver="showIFrameHandler(event)">
+				<flexiframe:IFrame id="iFrameBySource" x="6" y="14" width="804" height="357"
+								   source="Dfdq.html"/>
+			</mx:Canvas> 
+		</mx:TabNavigator>
+		
+		<s:Button id="Bt" x="53" y="34" label="按钮" click="myFunction(event)"
+				  mouseOver="menubar1_mouseOverHandler(event)"/>
+		<s:Button x="70" y="73" label="按钮" click="button1_clickHandler(event)"
+				  mouseOver="menubar1_mouseOverHandler(event)"/>
+	</mx:VBox>
+	
+	
+</s:Application>
